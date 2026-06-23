@@ -139,7 +139,7 @@
       token = "331c2d6bee32339c8bab60cab4a524";
       username = "CheesyMcPuffs";
       saveName = "2026MFGLovesMen";
-      nonBlockingSaving = true;
+      nonBlockingSaving = false;
     };
 
     transmission = {
@@ -457,6 +457,12 @@
   virtualisation.libvirtd.enable = true;
   time.timeZone = "America/Los_Angeles";
   systemd.services.nix-daemon.serviceConfig.LimitNOFILE = lib.mkForce 1048576;
+  systemd.services.factorio.serviceConfig = {
+    CPUSchedulingPolicy = "rr";
+    CPUSchedulingPriority = 99;
+    IOSchedulingClass = "realtime";
+    Nice = -20;
+  };
 
   security.pam.loginLimits = [
     {
