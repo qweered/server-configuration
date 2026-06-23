@@ -33,10 +33,11 @@
       tmpfsSize = "40%";
     };
 
-    initrd.kernelModules = ["zfs"];
-    supportedFilesystems = ["zfs"];
-    zfs.forceImportAll = true;
-    zfs.extraPools = ["nixstore"];
+    initrd.kernelModules = [ "zfs" ];
+    initrd.supportedFilesystems.zfs = true;
+    supportedFilesystems = [ "zfs" ];
+    # zfs.forceImportAll = true;
+    # zfs.extraPools = [ "nixstore" ];
     extraModprobeConfig = ''
       options kvm-amd nested=1
       options kvm ignore_msrs=1

@@ -21,6 +21,7 @@
   fileSystems."/nix/store" =
     { device = "nixstore/store";
       fsType = "zfs";
+      options = [ "zfsutil" ];
     };
 
   fileSystems."/boot" =
