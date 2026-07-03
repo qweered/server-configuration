@@ -176,7 +176,7 @@
 
   # Programs {{{
   programs = {
-    bash.completion.enable = true;
+    # bash.completion.enable = true;
     mosh.enable = true;
 
     zsh = {
