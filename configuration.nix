@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ./prometheus-metrics.nix
     ./web.nix
+    ./snix.nix
   ];
   # }}}
 
@@ -57,7 +58,7 @@
     };
 
     nix-serve = {
-      enable = true;
+      enable = false;
       secretKeyFile = "/var/cache-priv-key.pem";
     };
 
@@ -74,6 +75,11 @@
       SystemMaxUse=200M
       RuntimeMaxUse=100M
     '';
+
+    ollama = {
+      enable = true;
+      package = pkgs.ollama-rocm;
+    };
 
     postgresql.package = pkgs.postgresql_14;
 
@@ -203,7 +209,6 @@
     hostId = "b5b5bea7";
     firewall.allowedTCPPorts = [
       config.services.hydra.port
-      config.services.nix-serve.port
       config.services.grafana.settings.server.http_port
       80
       443
@@ -456,6 +461,10 @@
   hardware.cpu.amd.updateMicrocode = true;
   virtualisation.libvirtd.enable = true;
   time.timeZone = "America/Los_Angeles";
+
+  # Snix binary cache at cache.jonringer.us (nar-bridge + post-build-hook).
+  services.snix.enable = true;
+
   systemd.services.nix-daemon.serviceConfig.LimitNOFILE = lib.mkForce 1048576;
   systemd.services.factorio.serviceConfig = {
     CPUSchedulingPolicy = "rr";

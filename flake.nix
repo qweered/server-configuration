@@ -4,6 +4,14 @@
   inputs.hydra.url = "github:NixOS/hydra";
   #inputs.hydra.inputs.nixpkgs.follows = "nixpkgs";
 
+  # Snix - Rust re-implementation of Nix. Used as a local-overlay backing
+  # store and nar-bridge binary cache. Upstream has no flake.nix so we pull
+  # the source in and build workspace members via crate2nix in ./snix-package.nix.
+  inputs.snix = {
+    url = "git+https://git.snix.dev/snix/snix.git";
+    flake = false;
+  };
+
   outputs = inputs: {
 
     nixosConfigurations.server = inputs.nixpkgs.lib.nixosSystem {
@@ -16,5 +24,11 @@
       };
     };
 
+    packages.x86_64-linux.snix =
+      inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage ./snix-package.nix {
+        # snix-package.nix imports the depot root (default.nix at the top of
+        # the snix repo), which then exposes `.snix.crates.workspaceMembers`.
+        snixSrc = inputs.snix;
+      };
   };
 }

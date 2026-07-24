@@ -70,7 +70,7 @@
         enableACME = true;
 
         locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString config.services.nix-serve.port}";
+          proxyPass = "http://[::1]:9000";
         };
       };
     };
