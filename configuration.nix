@@ -38,7 +38,7 @@
     initrd.supportedFilesystems.zfs = true;
     supportedFilesystems = [ "zfs" ];
     # zfs.forceImportAll = true;
-    # zfs.extraPools = [ "nixstore" ];
+    zfs.extraPools = [ "tank" ];
     extraModprobeConfig = ''
       options kvm-amd nested=1
       options kvm ignore_msrs=1
@@ -180,6 +180,16 @@
   };
   # }}}
 
+  # NetworkManager for wireless (wlo2) {{{
+  networking.networkmanager = {
+    enable = true;
+    unmanaged = [
+      "enp67s0"
+      "enp68s0"
+    ];
+  };
+  # }}}
+
   # Programs {{{
   programs = {
     # bash.completion.enable = true;
@@ -295,6 +305,7 @@
           "wheel"
           "plex"
           "libvirtd"
+          "networkmanager"
         ];
       };
 
