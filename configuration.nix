@@ -84,7 +84,7 @@
     postgresql.package = pkgs.postgresql_14;
 
     hydra = {
-      enable = true;
+      enable = false;
       package = inputs.hydra.packages.${pkgs.hostPlatform.system}.hydra;
 
       hydraURL = "https://hydra.jonringer.us";

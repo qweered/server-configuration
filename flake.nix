@@ -12,12 +12,19 @@
     flake = false;
   };
 
+  # Async post-build-hook: queues builds instead of blocking nix-daemon.
+  inputs.queued-build-hook = {
+    url = "github:nix-community/queued-build-hook";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   outputs = inputs: {
 
     nixosConfigurations.server = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         ./configuration.nix
+        inputs.queued-build-hook.nixosModules.queued-build-hook
       ];
       specialArgs = {
         inherit inputs;
