@@ -50,6 +50,9 @@ let
     ${config.nix.package}/bin/nix path-info --json --json-format 1 --recursive $OUT_PATHS \
       | ${pkgs.jq}/bin/jq '[to_entries[] | .value + {path: .key}]' \
       | ${cfg.package}/bin/snix-store copy -
+    # Push to Cachix binary cache.
+    # shellcheck disable=SC2086
+    ${pkgs.cachix}/bin/cachix push ekala-corepkgs $OUT_PATHS
   '';
 
 in {
@@ -72,12 +75,13 @@ in {
 
   config = lib.mkIf cfg.enable {
     # Add the snix binary cache so we don't have to rebuild snix from source.
-    nix.settings = lib.mkIf cfg.useSubstituter {
-      substituters = [ "https://cache.snix.dev" ];
-      trusted-public-keys = [
-        "cache.snix.dev-1:miTqzIzmCbX/DyK2tLNXDROk77CbbvcRdWA4y2F8pno="
-      ];
-    };
+    # This mostly just add additional failed queries
+    # nix.settings = lib.mkIf cfg.useSubstituter {
+    #   substituters = [ "https://cache.snix.dev" ];
+    #   trusted-public-keys = [
+    #     "cache.snix.dev-1:miTqzIzmCbX/DyK2tLNXDROk77CbbvcRdWA4y2F8pno="
+    #   ];
+    # };
 
     # Async post-build-hook: queues builds so nix-daemon isn't blocked
     # while signing + copying into the snix store.
