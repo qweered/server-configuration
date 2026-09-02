@@ -97,6 +97,7 @@ in {
     systemd.services.async-nix-post-build-hook = {
       after = [ "snix-store-daemon.service" ];
       requires = [ "snix-store-daemon.service" ];
+      serviceConfig.EnvironmentFile = "/var/lib/cachix/env";
     };
 
     # Expose snix CLI tools on $PATH. The full cfg.package is used by
